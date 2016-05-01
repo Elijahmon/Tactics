@@ -10,15 +10,19 @@ public class CursorController : MonoBehaviour
     Camera _selectionCamera;
     [SerializeField]
     LayerMask _moveLayer;
+    
 
     public CharacterStateController _selectedCharacter;
+    private CharacterUIController _characterInfo;
     private Transform _cursorParent;
+    private bool updateUI = true;
     
 
     void Awake()
     {
+        _characterInfo = GameObject.FindObjectOfType<CharacterUIController>();
         _cursorParent = this.GetComponent<RectTransform>();
-
+        StartCoroutine(UIUpdater());
     }
 
     void Update()
@@ -60,6 +64,18 @@ public class CursorController : MonoBehaviour
             {
                 _selectedCharacter.SetNewDestination(hit.point);
             }
+        }
+    }
+
+    private IEnumerator UIUpdater()
+    {
+        while(updateUI)
+        {
+            if(_selectedCharacter != null)
+            {
+                _characterInfo.UpdateforCharacter(_selectedCharacter.getSheet());
+            }
+            yield return new WaitForSeconds(.5f);
         }
     }
 }

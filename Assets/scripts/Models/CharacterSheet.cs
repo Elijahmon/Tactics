@@ -4,7 +4,6 @@ namespace Character_Information
 {
     public class CharacterSheet
     {
-
         public enum BASE_CLASSES { KNIGHT, ARCHER, SCOUT, MAGE };
         public enum FOCUS_TYPES {FIRE, WATER, EARTH, AIR, LIGHT, DARK };
         /// <summary>
@@ -15,6 +14,8 @@ namespace Character_Information
         {
             characterName = name;
             Random randomGenerator = new Random();
+            UnityEngine.Texture2D tex = UnityEngine.Resources.Load("DefaultPortrait") as UnityEngine.Texture2D;
+            portrait = UnityEngine.Sprite.Create(tex, new UnityEngine.Rect(0, 0, tex.width, tex.height), UnityEngine.Vector2.zero);
             baseClass = (BASE_CLASSES)randomGenerator.Next(0, 4);
             switch (baseClass)
             {
@@ -33,7 +34,7 @@ namespace Character_Information
             }
             focusType = (FOCUS_TYPES)randomGenerator.Next(0, 6);
         }
-
+        public UnityEngine.Sprite portrait;
         public string className;
         private BASE_CLASSES baseClass;
         public string characterName;

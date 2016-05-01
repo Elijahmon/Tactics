@@ -7,6 +7,7 @@ public class CharacterResource : CharacterStat {
     public CharacterResource(int baseStat, STATE_TYPE statType) : base(baseStat, statType)
     {
         currentResource = baseAmount + bonusAmount;
+        maxResource = baseAmount + bonusAmount;
     }
 
 
@@ -71,5 +72,21 @@ public class CharacterResource : CharacterStat {
             currentResource -= amount;
             return true;
         }
+    }
+    /// <summary>
+    /// Gets the current amount of the resource
+    /// </summary>
+    /// <returns>amount of resource</returns>
+    public int getCurrent()
+    {
+        return currentResource;
+    }
+    /// <summary>
+    /// Gets the max amount of the resource
+    /// </summary>
+    /// <returns>max amount of resource</returns>
+    public int getMax()
+    {
+        return maxResource;
     }
 }
