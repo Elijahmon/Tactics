@@ -16,19 +16,10 @@ public class CharacterResource : CharacterStat {
     /// </summary>
     /// <param name="amount">amount to refill</param>
     /// <returns>returns true if resource is maxed out</returns>
-    public bool RefillResource(int amount)
+    public void RefillResource(int amount)
     {
-       if(amount + currentResource <= maxResource)
-        {
-            currentResource = maxResource;
-            return true;
-        }
-        else
-        {
-            currentResource += amount;
-            return false;
-        }
     }
+
     /// <summary>
     /// Checks if there is enough for a given cost
     /// </summary>
@@ -42,50 +33,37 @@ public class CharacterResource : CharacterStat {
             return false;
 
     }
+
     /// <summary>
     /// changes the bonus amount for the resource and updates its max
     /// </summary>
     /// <param name="mod">amount to modify the stat by</param>
-    /// <returns>returns 0 for lowered stat and 1 for increased stat</returns>
-    public override int modifyStat(int mod)
+    public override void ModifyStat(int mod)
     {
-        int outCode = base.modifyStat(mod);
-        maxResource = baseAmount + bonusAmount + buffAmount;
-        return outCode;
     }
+
     /// <summary>
-    /// Expends a given amount of a resource
+    /// Uses a given amount of a resource
     /// </summary>
     /// <param name="amount">amount of resource expended</param>
-    /// <returns>false if resource is now 0</returns>
-    public bool ExpendResource(int amount)
+    public void UseResource(int amount)
     {
-        if (amount < 0)
-            return true;
-        if(currentResource - amount <= 0)
-        {
-            currentResource = 0;
-            return false;
-        }
-        else
-        {
-            currentResource -= amount;
-            return true;
-        }
     }
+
     /// <summary>
     /// Gets the current amount of the resource
     /// </summary>
     /// <returns>amount of resource</returns>
-    public int getCurrent()
+    public int GetCurrent()
     {
         return currentResource;
     }
+
     /// <summary>
     /// Gets the max amount of the resource
     /// </summary>
     /// <returns>max amount of resource</returns>
-    public int getMax()
+    public int GetMax()
     {
         return maxResource;
     }
