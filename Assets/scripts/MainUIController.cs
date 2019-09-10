@@ -7,30 +7,27 @@ public class MainUIController :  UIController
 {
 
     [SerializeField]
-    GameObject _menuUI;
+    MenuUIController _menuUI;
     [SerializeField]
-    GameObject _battleUI;
+    BattleUIController _battleUI;
 
     public override void Init()
     {
         base.Init();
+        _menuUI.Init();
         ToggleMenuUI(true);
+        _battleUI.Init();
         ToggleBattleUI(false);
-    }
-
-    public void OnStartGamePressed()
-    {
-        GameStateManager.instance.StartGame();
     }
 
     public void ToggleMenuUI(bool toggle)
     {
-        _menuUI.SetActive(toggle);
+        _menuUI.gameObject.SetActive(toggle);
     }
 
     public void ToggleBattleUI(bool toggle)
     {
-        _battleUI.SetActive(toggle);
+        _battleUI.gameObject.SetActive(toggle);
     }
 
 }

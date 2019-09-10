@@ -16,13 +16,22 @@ public class GameStateManager : MonoBehaviour
     MainUIController _ui;
     [SerializeField]
     BattleManager _battle;
+    [SerializeField]
+    PlayerController _playerController;
+
+    Player _player;
+    int loadedLevel;
 
     void Awake()
     {
+        
         Object.DontDestroyOnLoad(this);
         instance = this;
-        currentState = GameState.MENU;
+        _battle.Init();
         _ui.Init();
+        currentState = GameState.MENU;
+        loadedLevel = -1;
+        _playerController.Init(CreateNewPlayer("Default"));
     }
 
     // Update is called once per frame
@@ -31,12 +40,29 @@ public class GameStateManager : MonoBehaviour
         
     }
 
+    public Player CreateNewPlayer(string name)
+    {
+        _player = new Player(name);
+        return _player;
+    }
+
     public void StartGame()
     {
         currentState = GameState.BATTLE;
         _ui.ToggleMenuUI(false);
         _ui.ToggleBattleUI(true);
         _battle.LoadLevel(1);
+    }
+
+    public void ExitBattle()
+    {
+        if(currentState == GameState.BATTLE)
+        {
+            _battle.UnloadLevel(_battle.GetLoadedLevelID());
+            currentState = GameState.MENU;
+            _ui.ToggleBattleUI(false);
+            _ui.ToggleMenuUI(true);
+        }
     }
 
     #region Getters
