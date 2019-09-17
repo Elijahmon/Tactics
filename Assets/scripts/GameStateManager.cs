@@ -30,7 +30,7 @@ public class GameStateManager : MonoBehaviour
         _battle.Init();
         _ui.Init();
         currentState = GameState.MENU;
-        loadedLevel = -1;
+        loadedLevel = 1;
         _playerController.Init(CreateNewPlayer("Default"));
     }
 
@@ -46,12 +46,13 @@ public class GameStateManager : MonoBehaviour
         return _player;
     }
 
-    public void StartGame()
+    public void StartGame(int levelID)
     {
         currentState = GameState.BATTLE;
         _ui.ToggleMenuUI(false);
         _ui.ToggleBattleUI(true);
-        _battle.LoadLevel(1);
+        Debug.Log("Loading Scene " + levelID);
+        _battle.LoadLevel(levelID);
     }
 
     public void ExitBattle()
@@ -69,6 +70,10 @@ public class GameStateManager : MonoBehaviour
     public GameState GetGameState()
     {
         return currentState; 
+    }
+    public Player GetPlayer()
+    {
+        return _player;
     }
     #endregion
 }

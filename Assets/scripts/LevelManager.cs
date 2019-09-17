@@ -19,6 +19,8 @@ public class LevelManager : MonoBehaviour
     [SerializeField]
     List<ExitController> exits;
 
+    [SerializeField]
+    List<EnemyCharacterController> enemies;
 
     public void Init(BattleManager battle, Transform origin)
     {
@@ -40,6 +42,13 @@ public class LevelManager : MonoBehaviour
             exit.Init(this);
         }
 
+        enemies = new List<EnemyCharacterController>();
+        foreach(var enemy in FindObjectsOfType<EnemyCharacterController>())
+        {
+            enemies.Add(enemy);
+            enemy.Init(this);
+        }
+
         levelObjectives = new List<LevelObjective>();
         foreach(var obj in _config.objectives)
         {
@@ -48,6 +57,8 @@ public class LevelManager : MonoBehaviour
         }
             
         _battle.UpdateObjectiveUI(levelObjectives);
+        
+
     }
 
     public void LootItemAquired(LootItemController item)

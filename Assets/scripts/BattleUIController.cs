@@ -7,6 +7,8 @@ public class BattleUIController : UIController
     [SerializeField]
     Camera _cam;
     [SerializeField]
+    Canvas _uiCanvas;
+    [SerializeField]
     GameObject loadingScreen;
     [SerializeField]
     GameObject victoryScreen;
@@ -55,7 +57,9 @@ public class BattleUIController : UIController
 
     public void UpdateCursorPosition(Vector2 mousePosition)
     {
-       cursor.anchoredPosition = _cam.ScreenToViewportPoint(mousePosition);
+        Vector2 pos;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(_uiCanvas.transform as RectTransform, mousePosition, _cam, out pos);
+        cursor.transform.position = _uiCanvas.transform.TransformPoint(pos);
     }
 
     public void OnReturnToMainMenuPressed()

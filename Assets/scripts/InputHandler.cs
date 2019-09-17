@@ -21,6 +21,7 @@ public class InputHandler : MonoBehaviour
     bool confirm;
     bool cancel;
     Vector2 mousePostion;
+    float scroll;
 
     public void Init()
     {
@@ -35,6 +36,7 @@ public class InputHandler : MonoBehaviour
         confirm = Input.GetAxis(InputReference.CONFIRM) > 0 ? true : false;
         cancel = Input.GetAxis(InputReference.CANCEL) > 0 ? true : false;
         mousePostion = Input.mousePosition;
+        scroll = Input.GetAxis(InputReference.SCROLL);
     }
 
     private void FixedUpdate()
@@ -89,6 +91,7 @@ public class InputHandler : MonoBehaviour
 
         #region Movement
         _battle.ProcessMousePosition(mousePostion);
+        _battle.ProcessScrollInput(scroll);
         #endregion
     }
 

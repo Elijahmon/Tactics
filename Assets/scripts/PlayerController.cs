@@ -29,10 +29,16 @@ public class PlayerController : MonoBehaviour
     public void Init(Player player)
     {
         _player = player;
+        _cameraController.Init();
         spawnedCharacters = new List<PlayerCharacterController>();
     }
 
-    public void SpawnCharacter(Vector3 position)
+    public void InitForLevel(Transform levelOrigin)
+    {
+        camTarget.transform.position = levelOrigin.position;
+    }
+
+    public PlayerCharacterController SpawnCharacter(Vector3 position)
     {
         Debug.Log("Spawning Character at " + position);
         PlayerCharacterController c = Instantiate<GameObject>(characterPrefab).GetComponent<PlayerCharacterController>();
@@ -40,6 +46,8 @@ public class PlayerController : MonoBehaviour
         spawnedCharacters.Add(c);
         c.Init();
         Deselect();
+
+        return c;
     }
 
     public void DespawnCharacter(PlayerCharacterController character)
@@ -52,7 +60,9 @@ public class PlayerController : MonoBehaviour
     {
         selectedCharacter = p;
         camTarget.parent = p.transform;
+        camTarget.localPosition = Vector3.zero;
         p.ToggleSelectionVisible(true);
+        _cameraController.ActivateChaseCamera();
         //Debug.Log("Selected " + p.name);
     }
 
@@ -64,6 +74,7 @@ public class PlayerController : MonoBehaviour
             selectedCharacter = null;
         }
         camTarget.parent = transform;
+        _cameraController.ActivateFreeCamera();
     }
 
     public List<PlayerCharacterController> GetCharacters()
@@ -72,10 +83,6 @@ public class PlayerController : MonoBehaviour
     }
 
     #region Input
-    bool lmbOldState;
-    bool rmbOldState;
-
-
     public void ProcessLMBInput(Vector2 mousePosition)
     {
         RaycastHit hit;
@@ -92,7 +99,6 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-
     public void ProcessRMBInput(Vector2 mousePosition)
     {
         if (selectedCharacter != null)
@@ -103,23 +109,24 @@ public class PlayerController : MonoBehaviour
                 //Debug.Log("hit " + hit.point);
                 selectedCharacter.SetNewDestination(hit.point);
             }
-            
+
         }
     }
-
     public void ProcessMousePosition(Vector2 mousePosition)
     {
         _cameraController.ProcessMousePosition(mousePosition);
     }
-    
     public void ProcessConfirmInput(bool input)
     {
 
     }
-
     public void ProcessCancelInput(bool input)
     {
 
+    }
+    public void ProcessScrollInput(float input)
+    {
+        _cameraController.ProcessScrollInput(input);
     }
     #endregion
 }

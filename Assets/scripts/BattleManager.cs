@@ -21,22 +21,28 @@ public class BattleManager : MonoBehaviour
     Transform _levelTransform;
 
     LevelManager currentLevel;
+    List<PlayerCharacterController> playerCharacters;
+    List<EnemyCharacterController> enemyCharacters;
 
     public void Init()
     {
         loadedLevel = -1;
         instance = this;
         currentState = BATTLE_STATE.INACTIVE;
+        _player.Init(GameStateManager.instance.GetPlayer());
+        playerCharacters = new List<PlayerCharacterController>();
+        enemyCharacters = new List<EnemyCharacterController>();
     }
 
     public void SpawnPlayerCharacter(Vector3 position)
     {
-        _player.SpawnCharacter(position);
+       playerCharacters.Add(_player.SpawnCharacter(position));
     }
 
     public void DespawnCharacterEscaped(PlayerCharacterController character)
     {
         _player.Deselect();
+        playerCharacters.Remove(character);
         _player.DespawnCharacter(character);
     }
 
@@ -72,19 +78,17 @@ public class BattleManager : MonoBehaviour
 
         currentLevel = FindObjectOfType<LevelManager>();
         currentLevel.Init(this, _levelTransform);
+        _player.InitForLevel(_levelTransform);
         loadedLevel = levelId;
         currentState = BATTLE_STATE.ACTIVE;
-    }
-
-    public List<PlayerCharacterController> GetPlayerCharacters()
-    {
-        return _player.GetCharacters();
     }
 
     public void ExitBattle()
     {
         if(currentState != BATTLE_STATE.INACTIVE)
         {
+            playerCharacters.Clear();
+            enemyCharacters.Clear();
             GameStateManager.instance.ExitBattle();
         }
     }
@@ -99,10 +103,20 @@ public class BattleManager : MonoBehaviour
 
 
 
-    public int GetLoadedLevelID()
+    #region Util
+    public float GetDistanceBetween(PlayerCharacterController a, PlayerCharacterController b)
     {
-        return loadedLevel;
+        return Vector3.Distance(a.transform.position, b.transform.position);
     }
+    public float GetDistanceBetween(PlayerCharacterController a, EnemyCharacterController b)
+    {
+        return Vector3.Distance(a.transform.position, b.transform.position);
+    }
+    public float GetDistanceBetween(EnemyCharacterController a, PlayerCharacterController b)
+    {
+        return Vector3.Distance(a.transform.position, b.transform.position);
+    }
+    #endregion
 
     #region Input
     public void ProcessLMBDownInput(Vector2 mousePosition)
@@ -166,6 +180,26 @@ public class BattleManager : MonoBehaviour
                 _player.ProcessMousePosition(mousePosition);
                 break;
         }
+    }
+    public void ProcessScrollInput(float input)
+    {
+        switch(currentState)
+        {
+            case BATTLE_STATE.ACTIVE:
+                _player.ProcessScrollInput(input);
+                break;
+        }
+    }
+    #endregion
+
+    #region Getters
+    public int GetLoadedLevelID()
+    {
+        return loadedLevel;
+    }
+    public List<PlayerCharacterController> GetPlayerCharacters()
+    {
+        return playerCharacters;
     }
     #endregion
 
